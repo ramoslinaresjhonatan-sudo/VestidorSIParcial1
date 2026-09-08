@@ -1,0 +1,12 @@
+.app-header { position: sticky; z-index: 20; top: 0; display: flex; min-height: 76px; align-items: center; justify-content: space-between; gap: 25px; padding: 12px 32px; border-bottom: 1px solid var(--color-line); background: rgba(255,255,255,.92); backdrop-filter: blur(12px); }
+.header-heading { display: flex; align-items: center; gap: 12px; }.header-heading h1 { color: var(--color-ink); font-size: 1.06rem; letter-spacing: -.02em; }.header-heading p { margin-top: 2px; color: var(--color-muted); font-size: .69rem; }
+.header-menu { display: none; width: 39px; height: 39px; border-radius: 10px; color: var(--color-primary); background: var(--color-primary-soft); place-items: center; }
+.header-actions { display: flex; align-items: center; gap: 8px; }.header-icon-button { position: relative; display: grid; width: 39px; height: 39px; border-radius: 10px; color: var(--color-muted); background: transparent; cursor: pointer; place-items: center; }.header-icon-button:hover { color: var(--color-primary); background: var(--color-primary-soft); }
+.notification-button i { position: absolute; width: 7px; height: 7px; top: 8px; right: 8px; border: 2px solid #fff; border-radius: 50%; background: #dc6d62; }
+.header-divider { width: 1px; height: 31px; margin: 0 6px; background: var(--color-line); }
+.header-profile { display: flex; align-items: center; gap: 10px; padding: 4px; border-radius: 12px; background: transparent; cursor: pointer; text-align: left; }.header-profile:hover { background: #f7f9f8; }
+.header-avatar { display: grid; width: 39px; height: 39px; flex: 0 0 auto; border-radius: 11px; color: var(--color-primary); background: #ddefe8; font-size: .77rem; font-weight: 850; place-items: center; }
+.header-profile__text { display: grid; min-width: 150px; }.header-profile__text strong { color: var(--color-ink); font-size: .76rem; }.header-profile__text small { max-width: 210px; overflow: hidden; color: var(--color-muted); font-size: .59rem; text-overflow: ellipsis; white-space: nowrap; }.header-profile > svg { color: #9ca8a4; }
+
+@media (max-width: 1020px) { .header-menu { display: grid; } }
+@media (max-width: 680px) { .app-header { min-height: 68px; padding: 10px 16px; }.header-heading p, .header-profile__text, .header-profile > svg, .header-search, .header-divider { display: none; }.header-heading h1 { font-size: .95rem; } }

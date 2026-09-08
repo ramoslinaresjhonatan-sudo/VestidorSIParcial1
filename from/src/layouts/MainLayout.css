@@ -1,0 +1,8 @@
+.admin-layout { min-height: 100vh; background: var(--color-canvas); }
+.admin-layout__main { min-height: 100vh; margin-left: var(--sidebar-width); transition: margin-left 200ms ease; }
+.admin-layout--sidebar-collapsed .admin-layout__main { margin-left: var(--sidebar-collapsed-width); }
+.admin-content { width: min(100%, 1540px); margin: 0 auto; padding: 28px 32px 45px; }
+.logout-confirmation__actions { display: flex; justify-content: flex-end; gap: 9px; }
+@media (max-width: 1020px) { .admin-layout__main { margin-left: 0; } }
+@media (max-width: 680px) { .admin-content { padding: 22px 15px 36px; }.logout-confirmation__actions { flex-direction: column-reverse; }.logout-confirmation__actions .ui-button { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .admin-layout__main { transition: none; } }
