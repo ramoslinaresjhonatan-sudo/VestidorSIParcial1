@@ -1,0 +1,11 @@
+.spinner-state {
+  display: flex;
+  min-height: 180px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--color-muted);
+}
+
+.spinner-state svg { animation: spinner-rotate 0.8s linear infinite; }
+@keyframes spinner-rotate { to { transform: rotate(360deg); } }

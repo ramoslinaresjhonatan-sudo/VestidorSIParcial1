@@ -1,0 +1,38 @@
+.plans-page { max-width: 1240px; }
+.admin-plan-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 20px; }
+.admin-plan-card { display: flex; min-width: 0; flex-direction: column; padding: 20px; border: 1px solid var(--color-line); border-radius: 16px; background: #fff; }
+.admin-plan-card--featured { border-color: #d6b86e; box-shadow: inset 0 3px 0 #d6b86e; }
+.admin-plan-card__top { display: flex; min-height: 55px; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.admin-plan-card__code { display: block; overflow: hidden; color: var(--color-success); font-size: .64rem; font-weight: 850; letter-spacing: .07em; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.admin-plan-card h2 { margin-top: 4px; color: var(--color-ink); font-size: 1.12rem; }
+.admin-plan-card__badges { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.admin-plan-card__price { margin-top: 19px; color: var(--color-ink); font-size: 1.75rem; font-weight: 850; letter-spacing: -.04em; }
+.admin-plan-card__description { min-height: 58px; margin-top: 7px; color: var(--color-muted); font-size: .76rem; line-height: 1.55; }
+.admin-plan-card__limits { display: grid; gap: 7px; margin-top: 15px; padding: 12px; border-radius: 11px; background: #f6f9f7; }
+.admin-plan-card__limits span { display: flex; align-items: center; gap: 7px; color: var(--color-text); font-size: .7rem; font-weight: 700; }
+.admin-plan-card ul { display: grid; gap: 7px; margin: 16px 0 20px; padding: 0; list-style: none; }
+.admin-plan-card li { display: flex; align-items: flex-start; gap: 7px; color: var(--color-text); font-size: .7rem; }
+.admin-plan-card li svg { flex: 0 0 auto; margin-top: 1px; color: var(--color-success); }
+.admin-plan-card footer { display: flex; gap: 4px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--color-line); }
+.admin-plan-card footer button { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; gap: 5px; padding: 6px 9px; border-radius: 8px; color: var(--color-text); background: transparent; cursor: pointer; font-size: .7rem; font-weight: 750; }
+.admin-plan-card footer button:hover { color: var(--color-primary); background: var(--color-primary-soft); }
+.admin-plan-card footer button.danger { margin-left: auto; color: var(--color-danger); }
+.admin-plan-card footer button.danger:hover { background: var(--color-danger-soft); }
+
+.plan-form textarea { width: 100%; padding: 11px 12px; resize: vertical; border: 1px solid var(--color-line); border-radius: 10px; outline: 0; color: var(--color-ink); background: #fbfcfb; font: inherit; line-height: 1.5; }
+.plan-form textarea:focus { border-color: #83ad9f; box-shadow: 0 0 0 3px rgba(40,121,95,.08); background: #fff; }
+.plan-form input[readonly] { color: var(--color-muted); background: #f1f4f3; cursor: not-allowed; }
+.plan-module-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.plan-module-grid button { display: flex; min-width: 0; align-items: center; gap: 9px; padding: 10px; border: 1px solid var(--color-line); border-radius: 10px; color: var(--color-text); background: #fff; cursor: pointer; font-size: .72rem; text-align: left; }
+.plan-module-grid button.selected { border-color: #8fc1b1; background: var(--color-primary-soft); }
+.plan-module-grid button i { display: grid; width: 18px; height: 18px; flex: 0 0 auto; border: 1px solid #bfcac7; border-radius: 5px; color: #fff; background: #fff; font-size: .66rem; font-style: normal; place-items: center; }
+.plan-module-grid button.selected i { border-color: var(--color-primary); background: var(--color-primary); }
+.plan-field-error { display: block; margin-top: 8px; color: var(--color-danger); font-size: .69rem; }
+.plan-switches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+
+@media (max-width: 1050px) { .admin-plan-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .admin-plan-grid { grid-template-columns: 1fr; padding: 13px; }
+  .admin-plan-card footer button span { display: none; }
+  .plan-module-grid, .plan-switches { grid-template-columns: 1fr; }
+}

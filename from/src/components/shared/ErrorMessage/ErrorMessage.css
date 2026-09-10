@@ -1,0 +1,1 @@
+.error-state { display: flex; min-height: 90px; align-items: center; justify-content: center; gap: 10px; padding: 18px; border: 1px solid #f0d0d0; border-radius: 13px; color: var(--color-danger); background: var(--color-danger-soft); font-size: .85rem; font-weight: 700; }.error-state button { color: inherit; background: transparent; cursor: pointer; text-decoration: underline; }
