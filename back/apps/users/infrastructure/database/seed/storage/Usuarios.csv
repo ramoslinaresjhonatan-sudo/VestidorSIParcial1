@@ -1,2 +1,5 @@
 nombre,apellido_paterno,apellido_materno,correo,password,rol
 Super,Administrador,,superadmin@edugestion.edu,SuperAdmin123!,Super Administrador
+
+superadmin@edugestion.edu
+SuperAdmin123!
