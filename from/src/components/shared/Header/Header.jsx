@@ -1,7 +1,8 @@
-import { Bell, ChevronDown, Menu, Search } from 'lucide-react'
-import { useLocation } from 'react-router-dom'
+import { Bell, ChevronDown, Menu, Search, ShoppingCart } from 'lucide-react'
+import { Link, useLocation } from 'react-router-dom'
 import { ROUTES } from '@/constants/routes'
 import { getStoredUser } from '@/utils/authSession'
+import { useCart } from '@/features/cart/hooks/useCart'
 import './Header.css'
 
 const titles = {
@@ -19,6 +20,8 @@ function initials(user, fallbackEmail) {
 export function Header({ user, onMenuClick, onLogout }) {
   const location = useLocation()
   const [title, subtitle] = titles[location.pathname] || ['Panel', 'Administración educativa']
+  const cartQuery = useCart()
+  const cartCount = cartQuery.data?.total_items ?? 0
   const storedUser = getStoredUser()
   const displayName = user ? `${user.nombre} ${user.apellido_paterno}` : 'Usuario del sistema'
   const roleName = user?.roles?.[0]?.nombre || 'Administrador'
@@ -30,6 +33,10 @@ export function Header({ user, onMenuClick, onLogout }) {
         <div><h1>{title}</h1><p>{subtitle}</p></div>
       </div>
       <div className="header-actions">
+        <Link to={ROUTES.CART} className="header-icon-button" aria-label="Mi Carrito" style={{position:'relative'}}>
+          <ShoppingCart size={19} />
+          {cartCount>0 && <span style={{position:'absolute',top:-4,right:-4,background:'#ef4444',color:'#fff',fontSize:'10px',padding:'2px 5px',borderRadius:999}}>{cartCount}</span>}
+        </Link>
         <button className="header-icon-button header-search" type="button" aria-label="Buscar"><Search size={19} /></button>
         <button className="header-icon-button notification-button" type="button" aria-label="Notificaciones"><Bell size={19} /><i /></button>
         <div className="header-divider" />

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework",
     "apps.billing.apps.BillingConfig",
+    "apps.cart.apps.CartConfig",
     "apps.catalog.apps.CatalogConfig",
     "apps.users.apps.UsersConfig",
 ]

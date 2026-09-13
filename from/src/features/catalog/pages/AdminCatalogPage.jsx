@@ -23,7 +23,7 @@ export function AdminCatalogPage() {
     const items = query.data || []
     const term = search.trim().toLowerCase()
     if (!term) return items
-    return items.filter(p => `${p.nombre} ${p.categoria} ${p.color} ${p.talla}`.toLowerCase().includes(term))
+    return items.filter(p => `${p.nombre} ${p.categoria} ${p.color} ${p.talla} ${p.categorias?.map(c=>c.nombre).join(' ')}`.toLowerCase().includes(term))
   }, [query.data, search])
 
   const showNotice = (m) => { setNotice(m); setTimeout(()=>setNotice(''), 3500) }
@@ -66,7 +66,7 @@ export function AdminCatalogPage() {
             {products.map(p => (
               <article key={p.id} className={`admin-plan-card ${!p.activo ? 'admin-plan-card--inactive':''}`}>
                 <div className="catalog-admin-image">{p.imagen_url || p.imagen ? <img src={p.imagen_url || p.imagen} alt={p.nombre} /> : <span>Sin imagen</span>}</div>
-                <span className="admin-plan-card__code">{p.categoria_display} • {p.talla}</span>
+                <span className="admin-plan-card__code">{p.categoria_display} • {p.talla} • {(p.categorias||[]).map(c=>c.nombre).join(', ')||'Sin categoría edad'}</span>
                 <h3>{p.nombre}</h3>
                 <p className="admin-plan-card__price">{p.precio_formateado}</p>
                 <p className="admin-plan-card__description">Color: {p.color} • Stock: {p.stock} {p.activo ? '• Activo' : '• Inactivo'}</p>

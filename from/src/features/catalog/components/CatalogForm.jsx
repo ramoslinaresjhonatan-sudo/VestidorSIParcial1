@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/Button/Button'
-import { categoriaOptions, productSchema, tallaOptions } from '../schemas/catalogSchema'
+import { tipoPrendaOptions, productSchema, tallaOptions } from '../schemas/catalogSchema'
+import { usePublicCategorias } from '../hooks/useCatalog'
 
 function defaults(product) {
   return {
@@ -15,12 +16,16 @@ function defaults(product) {
     precio_bs: product ? product.precio_centavos / 100 : 10,
     stock: product?.stock ?? 0,
     activo: product?.activo ?? true,
+    categoria_ids: product?.categorias?.map(c=>c.id) || [],
   }
 }
 
 export function CatalogForm({ product, onSubmit, onCancel, loading, serverError }) {
   const editing = Boolean(product)
   const [preview, setPreview] = useState(product?.imagen_url || product?.imagen || null)
+  const categoriasQuery = usePublicCategorias()
+  const categorias = categoriasQuery.data || []
+  const [selectedCats, setSelectedCats] = useState(()=> defaults(product).categoria_ids)
   const {
     register,
     handleSubmit,
@@ -33,8 +38,11 @@ export function CatalogForm({ product, onSubmit, onCancel, loading, serverError 
 
   useEffect(() => {
     reset(defaults(product))
+    setSelectedCats(product?.categorias?.map(c=>c.id) || [])
     setPreview(product?.imagen_url || product?.imagen || null)
   }, [product, reset])
+
+  const toggleCat = (id) => setSelectedCats(prev => prev.includes(id) ? prev.filter(x=>x!==id) : [...prev, id])
 
   const submit = (values) => {
     const fd = new FormData()
@@ -47,6 +55,7 @@ export function CatalogForm({ product, onSubmit, onCancel, loading, serverError 
     fd.append('precio_centavos', String(Math.round(values.precio_bs * 100)))
     fd.append('stock', String(values.stock))
     fd.append('activo', values.activo ? 'true' : 'false')
+    selectedCats.forEach(id => fd.append('categoria_ids', String(id)))
     if (values.imagen && values.imagen[0] instanceof File) {
       fd.append('imagen', values.imagen[0])
     }
@@ -64,9 +73,9 @@ export function CatalogForm({ product, onSubmit, onCancel, loading, serverError 
 
       <div className="form-grid form-grid--two">
         <label className="plain-field">Nombre producto<span>*</span><input {...register('nombre')} placeholder="Ej. Vestido Floral" />{errors.nombre && <small>{errors.nombre.message}</small>}</label>
-        <label className="plain-field">Categoría<span>*</span>
+        <label className="plain-field">Tipo prenda<span>*</span>
           <select {...register('categoria')}>
-            {categoriaOptions.map(c => <option key={c} value={c}>{c}</option>)}
+            {tipoPrendaOptions.map(c => <option key={c} value={c}>{c}</option>)}
           </select>{errors.categoria && <small>{errors.categoria.message}</small>}
         </label>
         <label className="plain-field">Color<span>*</span><input {...register('color')} placeholder="Ej. Rojo, Negro" />{errors.color && <small>{errors.color.message}</small>}</label>
@@ -78,6 +87,18 @@ export function CatalogForm({ product, onSubmit, onCancel, loading, serverError 
         <label className="plain-field">Precio (Bs)<span>*</span><input type="number" min="1" step="0.01" {...register('precio_bs')} />{errors.precio_bs && <small>{errors.precio_bs.message}</small>}</label>
         <label className="plain-field">Stock<span>*</span><input type="number" min="0" {...register('stock')} />{errors.stock && <small>{errors.stock.message}</small>}</label>
       </div>
+
+      <fieldset className="choice-fieldset" style={{marginTop:12}}>
+        <legend>Categorías (tabla intermedia) - ¿Para quién? *</legend>
+        <p>Selecciona una o más: Niña, Adolescente, Adulta. Se guarda en tabla <code>ProductoCategoria</code>.</p>
+        <div className="plan-module-grid">
+          {categorias.map(cat => {
+            const selected = selectedCats.includes(cat.id)
+            return <button key={cat.id} type="button" className={selected ? 'selected' : ''} onClick={()=>toggleCat(cat.id)}><i>{selected ? '✓' : ''}</i><span>{cat.nombre}</span></button>
+          })}
+          {categorias.length===0 && <small>Cargando categorías...</small>}
+        </div>
+      </fieldset>
 
       <label className="plain-field">Descripción<textarea rows="2" {...register('descripcion')} placeholder="Descripción corta" />{errors.descripcion && <small>{errors.descripcion.message}</small>}</label>
       <label className="plain-field">Detalle / Materiales<textarea rows="3" {...register('detalle')} placeholder="Detalle largo, materiales, cuidados..." />{errors.detalle && <small>{errors.detalle.message}</small>}</label>

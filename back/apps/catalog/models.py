@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Categoria(models.TextChoices):
+class TipoPrenda(models.TextChoices):
     VESTIDOS = "vestidos", "Vestidos"
     BLUSAS = "blusas", "Blusas"
     FALDAS = "faldas", "Faldas"
@@ -12,6 +12,28 @@ class Categoria(models.TextChoices):
     ABRIGOS = "abrigos", "Abrigos / Chaquetas"
     TOPS = "tops", "Tops"
     OTRO = "otro", "Otro"
+
+
+# Alias para compatibilidad
+CategoriaPrenda = TipoPrenda
+
+
+class Categoria(models.Model):
+    """Tabla aparte para categorías demográficas: niña, adolescente, adulta."""
+
+    nombre = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=50, unique=True)
+    descripcion = models.CharField(max_length=200, blank=True)
+    activo = models.BooleanField(default=True)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("nombre",)
+        verbose_name = "categoría"
+        verbose_name_plural = "categorías"
+
+    def __str__(self):
+        return self.nombre
 
 
 class Talla(models.TextChoices):
@@ -34,7 +56,15 @@ class Talla(models.TextChoices):
 
 class Producto(models.Model):
     nombre = models.CharField(max_length=150)
-    categoria = models.CharField(max_length=30, choices=Categoria.choices)
+    # Mantiene compatibilidad con tipo de prenda anterior (vestidos, blusas, etc.)
+    categoria = models.CharField(max_length=30, choices=TipoPrenda.choices, default=TipoPrenda.VESTIDOS)
+    # Nueva relación M2M vía tabla intermedia para categorías demográficas
+    categorias = models.ManyToManyField(
+        Categoria,
+        through="ProductoCategoria",
+        related_name="productos",
+        blank=True,
+    )
     descripcion = models.TextField(blank=True, help_text="Descripción corta")
     detalle = models.TextField(blank=True, help_text="Detalle largo, materiales, cuidados")
     color = models.CharField(max_length=50, help_text="Ej: Rojo, Negro, Beige")
@@ -59,7 +89,8 @@ class Producto(models.Model):
         verbose_name_plural = "productos"
 
     def __str__(self):
-        return f"{self.nombre} ({self.categoria}/{self.talla}) - {self.precio_bs} Bs"
+        cats = ", ".join(c.nombre for c in self.categorias.all()) or self.categoria
+        return f"{self.nombre} ({cats}/{self.talla}) - {self.precio_bs} Bs"
 
     @property
     def precio_bs(self):
@@ -68,3 +99,21 @@ class Producto(models.Model):
     @property
     def precio_formateado(self):
         return f"{self.precio_bs:.2f} Bs"
+
+
+class ProductoCategoria(models.Model):
+    """Tabla intermedia entre Producto y Categoria."""
+
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="producto_categorias")
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name="categoria_productos")
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "producto - categoría"
+        verbose_name_plural = "productos - categorías"
+        constraints = [
+            models.UniqueConstraint(fields=["producto", "categoria"], name="unique_producto_categoria")
+        ]
+
+    def __str__(self):
+        return f"{self.producto_id} - {self.categoria.nombre}"

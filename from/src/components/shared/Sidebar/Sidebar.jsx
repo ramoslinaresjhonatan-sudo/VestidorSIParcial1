@@ -4,6 +4,7 @@ import {
   Crown,
   ShieldCheck,
   ShoppingBag,
+  ShoppingCart,
 } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import platformLogo from '@/assets/edugestion-platform-logo.png'
@@ -14,8 +15,17 @@ import './Sidebar.css'
 
 const navigationGroups = [
   {
+    key: 'tienda',
+    label: 'Tienda',
+    icon: ShoppingBag,
+    items: [
+      { to: ROUTES.CATALOGO, label: 'Catálogo', shortLabel: 'C' },
+      { to: ROUTES.CART, label: 'Mi Carrito', shortLabel: 'Ca' },
+    ],
+  },
+  {
     key: 'catalog',
-    label: 'Catálogo',
+    label: 'Catálogo Admin',
     icon: ShoppingBag,
     superAdminOnly: true,
     items: [

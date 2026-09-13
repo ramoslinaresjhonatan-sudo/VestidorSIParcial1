@@ -10,6 +10,7 @@ import { RolesPage } from '@/features/roles/pages/RolesPage'
 import { UsersPage } from '@/features/users/pages/UsersPage'
 import { CatalogPage } from '@/features/catalog/pages/CatalogPage'
 import { AdminCatalogPage } from '@/features/catalog/pages/AdminCatalogPage'
+import { CartPage } from '@/features/cart/pages/CartPage'
 import { MainLayout } from '@/layouts/MainLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ProtectedRoute } from './ProtectedRoute'
@@ -33,6 +34,7 @@ export function AppRouter() {
           <Route path={ROUTES.USERS} element={<UsersPage />} />
           <Route path={ROUTES.ROLES} element={<RolesPage />} />
           <Route path={ROUTES.PERMISSIONS} element={<PermissionsPage />} />
+          <Route path={ROUTES.CART} element={<CartPage />} />
           <Route path="/app/usuarios" element={<Navigate to={ROUTES.USERS} replace />} />
         </Route>
       </Route>

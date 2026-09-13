@@ -1,13 +1,15 @@
 import { z } from 'zod'
 
-export const categoriaOptions = [
+export const tipoPrendaOptions = [
   'vestidos','blusas','faldas','pantalones','jeans','conjuntos','ropa_interior','abrigos','tops','otro'
 ]
+// mantiene compatibilidad
+export const categoriaOptions = tipoPrendaOptions
 export const tallaOptions = ['XS','S','M','L','XL','XXL','UNICA','32','34','36','38','40','42','44','46']
 
 export const productSchema = z.object({
   nombre: z.string().trim().min(2, 'El nombre es obligatorio.').max(150),
-  categoria: z.enum(categoriaOptions, { errorMap: () => ({ message: 'Seleccione una categoría' }) }),
+  categoria: z.enum(tipoPrendaOptions, { errorMap: () => ({ message: 'Seleccione tipo de prenda' }) }),
   descripcion: z.string().trim().max(500).optional().or(z.literal('')),
   detalle: z.string().trim().max(2000).optional().or(z.literal('')),
   color: z.string().trim().min(2, 'El color es obligatorio.').max(50),

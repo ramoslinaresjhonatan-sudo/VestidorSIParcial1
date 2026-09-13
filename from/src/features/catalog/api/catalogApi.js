@@ -11,6 +11,27 @@ function toFormData(payload) {
 }
 
 export const catalogApi = {
+  // Categorías (tabla aparte niña/adolescente/adulta)
+  getPublicCategorias: async () => {
+    const { data } = await apiClient.get('/catalog/categorias/')
+    return data.data
+  },
+  getAdminCategorias: async () => {
+    const { data } = await apiClient.get('/catalog/admin/categorias/')
+    return data.data
+  },
+  createCategoria: async (payload) => {
+    const { data } = await apiClient.post('/catalog/admin/categorias/', payload)
+    return data.data
+  },
+  updateCategoria: async ({ id, payload }) => {
+    const { data } = await apiClient.patch(`/catalog/admin/categorias/${id}/`, payload)
+    return data.data
+  },
+  deleteCategoria: async (id) => {
+    const { data } = await apiClient.delete(`/catalog/admin/categorias/${id}/`)
+    return data
+  },
   getPublicProducts: async (params = {}) => {
     const { data } = await apiClient.get('/catalog/products/', { params })
     return data.data
