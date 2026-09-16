@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -90,6 +91,14 @@ export function LoginForm({ onSubmit, loading }) {
         <GoogleIcon />
         <span>Continuar con Google</span>
       </button>
+
+      <div className="register-option" style={{ marginTop: '15px', textAlign: 'center' }}>
+      <span style={{ color: '#666' }}>¿No tienes una cuenta? </span>
+       <Link to="/registro" style={{ color: '#0066cc', textDecoration: 'underline', fontWeight: 'bold' }}>
+         Regístrate aquí
+       </Link>
+       </div>
+
     </form>
   )
 }

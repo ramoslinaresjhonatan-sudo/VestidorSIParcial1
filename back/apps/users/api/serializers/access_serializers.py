@@ -94,3 +94,23 @@ class UsuarioUpdateSerializer(serializers.Serializer):
         if not attrs:
             raise serializers.ValidationError("Debe enviar al menos un campo.")
         return attrs
+
+
+class ClienteRegistroSerializer(serializers.Serializer):
+    nombre = serializers.CharField(max_length=150)
+    apellido_paterno = serializers.CharField(max_length=100)
+    apellido_materno = serializers.CharField(
+        max_length=100,
+        required=False,
+        allow_blank=True,
+        default="",
+    )
+    correo = serializers.EmailField(max_length=254)
+    password = serializers.CharField(
+        min_length=8,
+        write_only=True
+    )
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value

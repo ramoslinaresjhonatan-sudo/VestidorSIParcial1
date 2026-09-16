@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
+  REGISTER: '/registro',
   DASHBOARD: '/app',
   PLANS: '/app/superadministracion/planes',
   SUBSCRIPTIONS: '/app/superadministracion/suscripciones',
@@ -28,4 +29,7 @@ export const ROUTES = {
   MONTHLY_FEES: '/app/finanzas/mensualidades',
   CASH_REGISTER: '/app/finanzas/caja',
   FINANCIAL_REPORTS: '/app/finanzas/reportes',
+  CATALOGO: '/catalogo',
+  ADMIN_CATALOGO: '/app/catalogo',
+  CART: '/app/carrito',
 }

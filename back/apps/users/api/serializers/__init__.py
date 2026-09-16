@@ -1,5 +1,6 @@
 from .access_serializers import (
     AccessOptionsSerializer,
+    ClienteRegistroSerializer,
     PermisoSerializer,
     RolCreateSerializer,
     RolSerializer,
@@ -11,6 +12,7 @@ from .access_serializers import (
 
 __all__ = [
     "AccessOptionsSerializer",
+    "ClienteRegistroSerializer",
     "PermisoSerializer",
     "RolCreateSerializer",
     "RolSerializer",

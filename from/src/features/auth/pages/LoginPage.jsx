@@ -42,6 +42,8 @@ export function LoginPage() {
                 <h2>Inicia sesión</h2>
               </div>
               <LoginForm onSubmit={handleLogin} loading={login.isPending} />
+              <Link className="register-link" to={ROUTES.REGISTER}> No tienes una cuenta? Registrate
+              </Link>
               <Link className="login-return-link" to={ROUTES.HOME}>
                 <ArrowLeft size={16} /> Volver al inicio
               </Link>

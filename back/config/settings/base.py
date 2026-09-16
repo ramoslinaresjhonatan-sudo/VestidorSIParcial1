@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework",
     "apps.billing.apps.BillingConfig",
+    "apps.cart.apps.CartConfig",
+    "apps.catalog.apps.CatalogConfig",
     "apps.users.apps.UsersConfig",
 ]
 
@@ -97,6 +99,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.Usuario"
 MIGRATION_MODULES = {"users": "apps.users.infrastructure.Migrate"}
