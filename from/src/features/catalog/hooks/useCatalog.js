@@ -23,6 +23,53 @@ export function usePublicProducts(params) {
   })
 }
 
+export function useFilterOptions() {
+  return useQuery({
+    queryKey: ['catalog-filter-options'],
+    queryFn: catalogApi.getFilterOptions,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export function useProductDetail(id) {
+  return useQuery({
+    queryKey: ['catalog-detail', id],
+    queryFn: () => catalogApi.getPublicProduct(id),
+    enabled: Boolean(id),
+  })
+}
+
+export function useOpiniones(id) {
+  return useQuery({
+    queryKey: ['catalog-opiniones', id],
+    queryFn: () => catalogApi.getOpiniones(id),
+    enabled: Boolean(id),
+  })
+}
+
+export function useAddOpinion() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: catalogApi.addOpinion,
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: ['catalog-detail', vars.id] })
+      qc.invalidateQueries({ queryKey: ['catalog-opiniones', vars.id] })
+    },
+  })
+}
+
+export function useNotifyStock() {
+  return useMutation({ mutationFn: catalogApi.notifyStock })
+}
+
+export function useDisponibilidad(id, params) {
+  return useQuery({
+    queryKey: ['catalog-disponibilidad', id, params],
+    queryFn: () => catalogApi.getDisponibilidad({ id, params }),
+    enabled: Boolean(id),
+  })
+}
+
 export function useAdminProducts() {
   return useQuery({
     queryKey: ['catalog-admin'],

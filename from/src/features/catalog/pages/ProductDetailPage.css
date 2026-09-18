@@ -1,0 +1,49 @@
+.product-detail-page { display: grid; gap: 18px; }
+.product-back { display: inline-flex; gap: 6px; align-items: center; background: none; border: none; color: #2563eb; cursor: pointer; font-weight: 600; }
+.product-detail-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; }
+@media (max-width: 900px) { .product-detail-grid { grid-template-columns: 1fr; } }
+.product-gallery { display: grid; gap: 10px; }
+.product-gallery__main { position: relative; height: 520px; background: #f3f4f6; border-radius: 12px; overflow: hidden; display: grid; place-items: center; cursor: zoom-in; }
+.product-gallery__main img { width: 100%; height: 100%; object-fit: contain; }
+.gallery-zoom { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,.7); color: #fff; padding: 6px 10px; border-radius: 999px; font-size: .75rem; display: flex; gap: 6px; align-items: center; }
+.product-gallery__thumbs { display: flex; gap: 8px; overflow-x: auto; }
+.product-gallery__thumbs button { width: 72px; height: 72px; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: #fff; cursor: pointer; }
+.product-gallery__thumbs button.active { border-color: #2563eb; }
+.product-gallery__thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.product-info { padding: 20px; display: grid; gap: 14px; }
+.product-info h1 { margin: 0; font-size: 1.6rem; }
+.product-rating { display: flex; gap: 8px; align-items: center; color: #6b7280; font-size: .9rem; }
+.product-price { font-size: 1.5rem; font-weight: 800; color: #164f43; display: flex; gap: 10px; align-items: center; }
+.badge-venta { font-size: .7rem; padding: 4px 8px; border-radius: 999px; color: #fff; }
+.badge-venta.menor { background: #16a34a; } .badge-venta.mayor { background: #2563eb; }
+.product-desc { color: #374151; }
+.product-detalle { color: #6b7280; font-size: .9rem; background: #f9fafb; padding: 10px; border-radius: 8px; }
+.product-specs ul { list-style: none; padding: 0; display: grid; gap: 6px; }
+.product-specs li { font-size: .9rem; }
+.product-variants { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; display: grid; gap: 8px; }
+.variant-row { display: flex; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+.variant-row.selected { background: #eef2ff; border-color: #c7d2fe; }
+.variant-color { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #d1d5db; }
+.variant-tallas { display: flex; gap: 6px; flex-wrap: wrap; }
+.variant-tallas button { padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; cursor: pointer; font-size: .8rem; }
+.variant-tallas button.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+.variant-tallas button.out { opacity: .4; text-decoration: line-through; }
+.product-actions { display: grid; gap: 12px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
+.qty-row { display: flex; gap: 12px; align-items: center; }
+.qty-row input { width: 80px; padding: 8px; border: 1px solid #e5e7eb; border-radius: 8px; }
+.product-agotado { display: grid; gap: 8px; }
+.badge-agotado { background: #fef2f2; color: #dc2626; padding: 6px 10px; border-radius: 999px; font-weight: 700; display: inline-flex; gap: 6px; align-items: center; width: fit-content; }
+.notify-row { display: flex; gap: 8px; }
+.notify-row input { flex: 1; padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 8px; }
+.btn-add-cart { width: 100%; }
+.product-stock-sucursal table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.product-stock-sucursal th, .product-stock-sucursal td { padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+.stock-zero { color: #dc2626; font-weight: 700; } .stock-ok { color: #16a34a; font-weight: 700; }
+.product-opiniones { padding: 18px; display: grid; gap: 16px; }
+.opiniones-list { display: grid; gap: 12px; }
+.opinion { padding: 10px; background: #f9fafb; border-radius: 8px; }
+.opinion-head { display: flex; gap: 8px; align-items: center; }
+.opinion-stars { color: #f59e0b; }
+.opinion-form { display: grid; gap: 8px; border-top: 1px solid #e5e7eb; padding-top: 12px; }
+.opinion-form input, .opinion-form select, .opinion-form textarea { padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 8px; }
+.zoom-modal img { border-radius: 8px; }

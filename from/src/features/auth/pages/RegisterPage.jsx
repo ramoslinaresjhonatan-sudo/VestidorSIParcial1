@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import { ROUTES } from '@/constants/routes'
+import { authApi } from '../api/authApi'
+import { handleApiError } from '@/utils/handleApiError'
 
 export function RegisterPage() {
   const navigate = useNavigate()
@@ -30,11 +32,13 @@ export function RegisterPage() {
 
     try {
       console.log('Registrando:', form)
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      setSuccess('✅ Registro exitoso!')
+      const data = await authApi.register(form)
+      console.log('Registro OK:', data)
+      setSuccess('✅ Registro exitoso! Redirigiendo al login...')
       setTimeout(() => navigate(ROUTES.LOGIN), 1500)
     } catch (err) {
-      setError('❌ Error al registrar')
+      console.error('Error registro:', err)
+      setError(handleApiError(err) || '❌ Error al registrar')
     } finally {
       setLoading(false)
     }

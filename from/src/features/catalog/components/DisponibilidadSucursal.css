@@ -1,0 +1,15 @@
+.disponibilidad { display: grid; gap: 12px; }
+.disponibilidad__head small { color: #6b7280; }
+.disponibilidad__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.disponibilidad__manual { display: flex; gap: 8px; }
+.disponibilidad__manual input { flex: 1; padding: 8px; border: 1px solid #e5e7eb; border-radius: 8px; }
+.disponibilidad__map { background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 18px; text-align: center; display: grid; place-items: center; gap: 4px; color: #475569; }
+.disponibilidad__list { list-style: none; padding: 0; display: grid; gap: 10px; }
+.disponibilidad__item { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; background: #fff; }
+.disponibilidad__item.out { opacity: .7; background: #fef2f2; }
+.disponibilidad__item-head { display: flex; justify-content: space-between; align-items: center; }
+.stock-badge { padding: 4px 8px; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+.stock-badge.ok { background: #dcfce7; color: #166534; } .stock-badge.zero { background: #fee2e2; color: #dc2626; }
+.detalle-tallas { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.detalle-tallas span { font-size: .75rem; padding: 3px 6px; background: #f3f4f6; border-radius: 6px; }
+.detalle-tallas span.zero { text-decoration: line-through; opacity: .6; }

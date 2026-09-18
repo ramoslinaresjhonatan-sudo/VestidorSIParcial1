@@ -1,0 +1,14 @@
+.inventory-page { display: grid; gap: 16px; }
+.inventory-filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding: 12px; }
+.inventory-filters select, .inventory-filters input { padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 8px; }
+.inventory-table-wrap { overflow-x: auto; padding: 0; }
+.inventory-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.inventory-table th, .inventory-table td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+.inventory-table small { display: block; color: #6b7280; font-size: .75rem; }
+.inventory-table .actions { display: flex; gap: 6px; }
+.inventory-table .actions button { padding: 6px 10px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; cursor: pointer; font-size: .8rem; display: inline-flex; gap: 4px; align-items: center; }
+.inventory-table .actions button:hover { background: #f3f4f6; }
+.stock-zero { color: #dc2626; font-weight: 700; } .stock-ok { color: #16a34a; font-weight: 700; }
+.historial { padding: 16px; }
+.historial-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: .85rem; }
+.page-notice--danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; padding: 10px; border-radius: 8px; }

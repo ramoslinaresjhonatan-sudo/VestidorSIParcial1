@@ -30,6 +30,9 @@ export const ROUTES = {
   CASH_REGISTER: '/app/finanzas/caja',
   FINANCIAL_REPORTS: '/app/finanzas/reportes',
   CATALOGO: '/catalogo',
+  CATALOGO_DETALLE: '/catalogo/:id',
   ADMIN_CATALOGO: '/app/catalogo',
   CART: '/app/carrito',
+  PROFILE: '/app/perfil',
+  INVENTARIO: '/app/inventario',
 }

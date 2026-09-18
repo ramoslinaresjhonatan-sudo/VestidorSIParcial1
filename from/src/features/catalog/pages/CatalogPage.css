@@ -1,11 +1,27 @@
-.catalog-page .catalog-filters{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-.catalog-page .catalog-filters select{padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff}
+.catalog-page .catalog-filters-wrap{padding:16px;display:grid;gap:14px;margin-bottom:18px}
+.catalog-filters-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.catalog-filters-grid select,.catalog-filters-grid input{padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;width:100%}
+.catalog-filters-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.catalog-price-range{display:flex;align-items:center;gap:6px}
+.catalog-price-range input{flex:1}
+.catalog-ai{padding:14px;display:grid;gap:10px;margin-bottom:16px;border:1px solid #e0e7ff;background:#eef2ff}
+.catalog-ai__head{display:flex;gap:8px;align-items:center;color:#3730a3}
+.catalog-ai__head span{color:#64748b;font-size:.85rem}
+.catalog-ai__grid{display:flex;gap:12px;overflow-x:auto}
+.catalog-ai__item{min-width:180px;background:#fff;border-radius:10px;padding:8px;display:flex;gap:8px;align-items:center;border:1px solid #e5e7eb}
+.catalog-ai__item img{width:40px;height:40px;object-fit:cover;border-radius:8px;background:#f3f4f6}
+.catalog-ai__item small{display:block;color:#6b7280}
 .catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
 .catalog-card{overflow:hidden;display:flex;flex-direction:column}
 .catalog-card__image{position:relative;height:220px;background:#f3f4f6;display:grid;place-items:center;overflow:hidden}
 .catalog-card__image img{width:100%;height:100%;object-fit:cover}
 .catalog-placeholder{color:#9ca3af;font-size:.9rem}
-.catalog-badge{position:absolute;top:10px;right:10px;padding:4px 8px;border-radius:999px;font-size:.7rem;background:#ef4444;color:#fff}
+.catalog-badge{position:absolute;top:10px;right:10px;padding:4px 8px;border-radius:999px;font-size:.7rem;color:#fff}
+.catalog-badge--menor{background:#16a34a}
+.catalog-badge--mayor{background:#2563eb}
+.catalog-card__meta{font-size:.78rem;color:#6b7280}
+.catalog-card__stats{display:flex;gap:12px;font-size:.75rem;color:#6b7280}
+.catalog-card__stats span{display:flex;align-items:center;gap:4px}
 .catalog-card__body{padding:14px;display:grid;gap:6px}
 .catalog-card__cat{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:#6b7280}
 .catalog-card__body h3{margin:0;font-size:1.05rem}

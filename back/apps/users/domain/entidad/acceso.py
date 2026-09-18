@@ -26,3 +26,18 @@ class UsuarioEntidad:
     activo: bool
     es_superadministrador: bool
     roles: tuple[RolEntidad, ...] = field(default_factory=tuple)
+    # CU-03 Perfil
+    telefono: str = ""
+    direccion: str = ""
+    direccion_envio: str = ""
+    metodo_pago_preferido: str = ""
+    medida_pecho: float | None = None
+    medida_cintura: float | None = None
+    medida_cadera: float | None = None
+    altura: float | None = None
+    peso: float | None = None
+    talla_sugerida: str = ""
+    correo_verificado: bool = True
+    correo_pendiente_verificacion: str = ""
+    # CU-16 sucursal
+    sucursal: dict | None = None

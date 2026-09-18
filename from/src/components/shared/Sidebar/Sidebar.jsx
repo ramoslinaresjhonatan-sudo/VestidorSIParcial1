@@ -2,22 +2,33 @@ import { useState } from 'react'
 import {
   ChevronDown,
   Crown,
+  Package,
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
+  User,
 } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import platformLogo from '@/assets/edugestion-platform-logo.png'
 import { ROUTES } from '@/constants/routes'
-import { isSuperAdministrator } from '@/utils/accessControl'
+import { getUserRole, isSuperAdministrator } from '@/utils/accessControl'
 import { getStoredUser } from '@/utils/authSession'
 import './Sidebar.css'
 
 const navigationGroups = [
   {
+    key: 'cuenta',
+    label: 'Mi Cuenta',
+    icon: User,
+    items: [
+      { to: ROUTES.PROFILE, label: 'Mi Perfil', shortLabel: 'MP' },
+    ],
+  },
+  {
     key: 'tienda',
     label: 'Tienda',
     icon: ShoppingBag,
+    // cliente y todos ven tienda; admin/vendedor también pero no es su foco principal
     items: [
       { to: ROUTES.CATALOGO, label: 'Catálogo', shortLabel: 'C' },
       { to: ROUTES.CART, label: 'Mi Carrito', shortLabel: 'Ca' },
@@ -27,16 +38,25 @@ const navigationGroups = [
     key: 'catalog',
     label: 'Catálogo Admin',
     icon: ShoppingBag,
-    superAdminOnly: true,
+    allowedRoles: ['administrador'],
     items: [
       { to: ROUTES.ADMIN_CATALOGO, label: 'Productos', shortLabel: 'Pr' },
+    ],
+  },
+  {
+    key: 'inventario',
+    label: 'Inventario',
+    icon: Package,
+    allowedRoles: ['administrador', 'vendedor'],
+    items: [
+      { to: ROUTES.INVENTARIO, label: 'Gestión Inventario', shortLabel: 'Gi' },
     ],
   },
   {
     key: 'superAdministration',
     label: 'Superadministración',
     icon: Crown,
-    superAdminOnly: true,
+    allowedRoles: ['administrador'],
     items: [
       { to: ROUTES.PLANS, label: 'Planes', shortLabel: 'P' },
     ],
@@ -45,6 +65,7 @@ const navigationGroups = [
     key: 'access',
     label: 'Gestión de acceso',
     icon: ShieldCheck,
+    allowedRoles: ['administrador'],
     items: [
       { to: ROUTES.USERS, label: 'Usuarios', shortLabel: 'U' },
       { to: ROUTES.ROLES, label: 'Roles', shortLabel: 'R' },
@@ -124,9 +145,12 @@ export function Sidebar({
     : 'Usuario del sistema'
   const email = user?.correo || storedUser.email
   const roleName = user?.roles?.[0]?.nombre || 'Administrador'
-  const visibleGroups = navigationGroups.filter(
-    (group) => !group.superAdminOnly || isSuperAdministrator(user),
-  )
+  const role = getUserRole(user)
+  const visibleGroups = navigationGroups.filter((group) => {
+    if (group.superAdminOnly && !isSuperAdministrator(user)) return false
+    if (group.allowedRoles && !group.allowedRoles.includes(role)) return false
+    return true
+  })
 
   const toggleGroup = (groupKey) => {
     if (collapsed) {

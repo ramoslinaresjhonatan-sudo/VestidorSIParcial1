@@ -33,11 +33,33 @@ export const catalogApi = {
     return data
   },
   getPublicProducts: async (params = {}) => {
-    const { data } = await apiClient.get('/catalog/products/', { params })
+    const cleaned = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v !== undefined && v !== null))
+    const { data } = await apiClient.get('/catalog/products/', { params: cleaned })
+    return data.data
+  },
+  getFilterOptions: async () => {
+    const { data } = await apiClient.get('/catalog/products/filter-options/')
     return data.data
   },
   getPublicProduct: async (id) => {
     const { data } = await apiClient.get(`/catalog/products/${id}/`)
+    return data.data
+  },
+  getOpiniones: async (id) => {
+    const { data } = await apiClient.get(`/catalog/products/${id}/opiniones/`)
+    return data.data
+  },
+  addOpinion: async ({ id, payload }) => {
+    const { data } = await apiClient.post(`/catalog/products/${id}/opiniones/`, payload)
+    return data.data
+  },
+  notifyStock: async ({ id, payload }) => {
+    const { data } = await apiClient.post(`/catalog/products/${id}/notificar-stock/`, payload)
+    return data.data || data
+  },
+  getDisponibilidad: async ({ id, params = {} }) => {
+    const cleaned = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v !== undefined && v !== null))
+    const { data } = await apiClient.get(`/catalog/products/${id}/disponibilidad/`, { params: cleaned })
     return data.data
   },
   getAdminProducts: async () => {

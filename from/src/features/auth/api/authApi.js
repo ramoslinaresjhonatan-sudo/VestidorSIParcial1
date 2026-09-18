@@ -5,11 +5,15 @@ import { getStoredUser } from '@/utils/authSession'
 export const authApi = {
   // ✅ Login - Ruta CORRECTA para Simple JWT (baseURL ya incluye /api/v1)
   login: async (credentials) => {
+    const normalized = {
+      ...credentials,
+      correo: credentials.correo ? String(credentials.correo).trim().toLowerCase() : credentials.correo,
+    }
     console.log('📡 Enviando login a:', '/auth/token/')
-    console.log('📦 Credenciales:', credentials)
+    console.log('📦 Credenciales:', normalized)
     
     try {
-      const { data } = await apiClient.post('/auth/token/', credentials)
+      const { data } = await apiClient.post('/auth/token/', normalized)
       console.log('✅ Login exitoso:', data)
       return data  // { access, refresh }
     } catch (error) {

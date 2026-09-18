@@ -20,7 +20,7 @@ from .mappers import usuario_to_entity
 class DjangoUsuarioRepository(UsuarioRepository):
     @staticmethod
     def _queryset():
-        return Usuario.objects.prefetch_related(
+        return Usuario.objects.select_related("sucursal").prefetch_related(
             "groups__permissions__content_type"
         ).order_by("nombre", "apellido_paterno", "apellido_materno")
 
@@ -76,16 +76,44 @@ class DjangoUsuarioRepository(UsuarioRepository):
     def update(self, usuario_id: int, data: Mapping[str, Any]) -> UsuarioEntidad:
         usuario = self._model(usuario_id)
 
+        # CU-03: cambio de email con verificación
         if "correo" in data:
-            correo = str(data["correo"])
-            duplicated = Usuario.objects.filter(correo__iexact=correo).exclude(pk=usuario_id)
-            if duplicated.exists():
-                raise CorreoDuplicadoError("Ya existe un usuario con este correo.")
-            usuario.correo = correo
+            nuevo_correo = str(data["correo"])
+            if nuevo_correo.lower() != usuario.correo.lower():
+                duplicated = Usuario.objects.filter(correo__iexact=nuevo_correo).exclude(pk=usuario_id)
+                if duplicated.exists():
+                    raise CorreoDuplicadoError("Ya existe un usuario con este correo.")
+                # Flujo alterno: requiere verificación nuevamente
+                usuario.correo_pendiente_verificacion = nuevo_correo
+                usuario.correo_verificado = False
+                # No se cambia correo directamente hasta verificar, pero por ahora actualizamos y marcamos no verificado
+                # Para demo: se actualiza correo y se marca pendiente
+                usuario.correo = nuevo_correo
+            else:
+                usuario.correo = nuevo_correo
 
         for field in ("nombre", "apellido_paterno", "apellido_materno"):
             if field in data:
                 setattr(usuario, field, str(data[field]))
+        # CU-03 campos perfil
+        for field in ("telefono", "direccion", "direccion_envio", "metodo_pago_preferido"):
+            if field in data:
+                setattr(usuario, field, str(data[field]))
+        for field in ("medida_pecho", "medida_cintura", "medida_cadera", "altura", "peso"):
+            if field in data:
+                val = data[field]
+                setattr(usuario, field, val if val is not None and val != "" else None)
+        # Actualiza sugerencia de talla automática si hay medidas
+        if any(k in data for k in ("medida_pecho", "medida_cintura", "medida_cadera")):
+            # calcular nueva talla
+            from apps.users.application.services import UserService
+
+            pecho = data.get("medida_pecho", usuario.medida_pecho)
+            cintura = data.get("medida_cintura", usuario.medida_cintura)
+            talla = UserService.suggest_size(pecho, cintura)
+            if talla:
+                usuario.talla_sugerida = talla
+
         if "activo" in data:
             usuario.is_active = bool(data["activo"])
         if "password" in data:
@@ -99,6 +127,12 @@ class DjangoUsuarioRepository(UsuarioRepository):
         if "roles_ids" in data:
             usuario.groups.set(self._roles(data["roles_ids"]))
         return self.get(usuario.pk)
+
+    def get_by_correo(self, correo: str) -> UsuarioEntidad | None:
+        usuario = self._queryset().filter(correo__iexact=correo).first()
+        if usuario is None:
+            return None
+        return usuario_to_entity(usuario)
 
     @transaction.atomic
     def annul(self, usuario_id: int) -> UsuarioEntidad:
