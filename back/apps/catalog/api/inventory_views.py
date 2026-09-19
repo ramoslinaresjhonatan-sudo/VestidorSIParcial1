@@ -85,10 +85,6 @@ class InventarioListView(APIView):
 
 class InventarioSucursalesView(APIView):
     permission_classes = [IsAuthenticated]
-    def initial(self, request, *args, **kwargs):
-        super().initial(request, *args, **kwargs)
-        if not _can_manage_inventory(request.user):
-            self.permission_denied(request, message="Solo administrador o vendedor puede gestionar inventario.")
     def get(self, request):
         qs = Sucursal.objects.filter(activo=True)
         if request.user.sucursal_id and not request.user.is_superuser:

@@ -1,13 +1,15 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Minus, Plus, Trash2, Tag, ShoppingBag } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Minus, Plus, Trash2, Tag, ShoppingBag, QrCode, CreditCard, Banknote } from 'lucide-react'
 import { Button } from '@/components/ui/Button/Button'
+import { Modal } from '@/components/ui/Modal/Modal'
 import { EmptyState } from '@/components/shared/EmptyState/EmptyState'
 import { ErrorMessage } from '@/components/shared/ErrorMessage/ErrorMessage'
 import { Spinner } from '@/components/ui/Spinner/Spinner'
 import { handleApiError } from '@/utils/handleApiError'
 import { ROUTES } from '@/constants/routes'
 import { useCart, useCartActions } from '../hooks/useCart'
+import { useCrearPedido } from '@/features/pedidos/hooks/usePedidos'
 import './CartPage.css'
 
 function formatBs(centavos) {
@@ -17,9 +19,13 @@ function formatBs(centavos) {
 export function CartPage() {
   const cartQuery = useCart()
   const actions = useCartActions()
+  const navigate = useNavigate()
+  const crearPedido = useCrearPedido()
   const [coupon, setCoupon] = useState('')
   const [couponError, setCouponError] = useState('')
   const [notice, setNotice] = useState('')
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [pago, setPago] = useState('tarjeta')
 
   const cart = cartQuery.data
   const items = cart?.items || []
@@ -153,10 +159,31 @@ export function CartPage() {
             )}
           </div>
 
-          <Button icon={ShoppingBag} style={{width:'100%', marginTop:12}}>Proceder a comprar</Button>
-          <p style={{fontSize:'.75rem', color:'#6b7280', marginTop:8}}>El total se recalcula automáticamente.</p>
+          <Button icon={ShoppingBag} style={{width:'100%', marginTop:12}} onClick={()=>setCheckoutOpen(true)}>Proceder a comprar</Button>
+          <p style={{fontSize:'.75rem', color:'#6b7280', marginTop:8}}>CU-13 Online • CU-15/16 QR/Tarjeta</p>
         </aside>
       </div>
+
+      <Modal isOpen={checkoutOpen} onClose={()=>setCheckoutOpen(false)} title="Finalizar compra" size="sm">
+        <div style={{ display: 'grid', gap: 12 }}>
+          <p>Total a pagar: <strong>{formatBs(cart.total_centavos)}</strong></p>
+          <div style={{ display: 'grid', gap: 6 }}>
+            <label style={{ display:'flex', gap:6, alignItems:'center' }}><input type="radio" name="pago" checked={pago==='tarjeta'} onChange={()=>setPago('tarjeta')} /> <CreditCard size={14}/> Tarjeta</label>
+            <label style={{ display:'flex', gap:6, alignItems:'center' }}><input type="radio" name="pago" checked={pago==='qr'} onChange={()=>setPago('qr')} /> <QrCode size={14}/> QR</label>
+            <label style={{ display:'flex', gap:6, alignItems:'center' }}><input type="radio" name="pago" checked={pago==='efectivo'} onChange={()=>setPago('efectivo')} /> <Banknote size={14}/> Efectivo (solo tienda)</label>
+          </div>
+          {pago==='qr' && <div style={{ display:'grid', placeItems:'center', background:'#f9fafb', padding:10, borderRadius:8 }}><img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Pedido:${cart.total_centavos}:${Date.now()}`} alt="QR" /><small>QR {(cart.total_centavos/100).toFixed(2)} Bs — paga escaneando</small></div>}
+          <div style={{ display:'flex', gap:8, justifyContent:'flex-end' }}>
+            <Button variant="secondary" onClick={()=>setCheckoutOpen(false)}>Cancelar</Button>
+            <Button loading={crearPedido.isPending} onClick={()=>{
+              crearPedido.mutate({ tipo:'online', pago_metodo: pago }, {
+                onSuccess:(d)=>{ setCheckoutOpen(false); setNotice(`Pedido #${d.id} creado por ${(d.total_centavos/100).toFixed(2)} Bs`); cartQuery.refetch(); setTimeout(()=>navigate('/app/pedidos'), 800) },
+                onError:(e)=> setNotice(handleApiError(e))
+              })
+            }}>Confirmar pago — {formatBs(cart.total_centavos)}</Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   )
 }

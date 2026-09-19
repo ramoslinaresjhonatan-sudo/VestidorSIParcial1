@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.catalog.models import Categoria, Merma, NotificacionStock, Opinion, Producto, ProductoCategoria, ProductoImagen, StockSucursal, Sucursal, Traslado
+from apps.catalog.models import Apartado, Categoria, Merma, NotificacionStock, Opinion, Pedido, PedidoItem, Producto, ProductoCategoria, ProductoImagen, StockSucursal, Sucursal, Traslado
 
 
 class ProductoCategoriaInline(admin.TabularInline):
@@ -74,3 +74,20 @@ class ProductoCategoriaAdmin(admin.ModelAdmin):
     list_display = ("id", "producto", "categoria", "creado_en")
     list_filter = ("categoria",)
     search_fields = ("producto__nombre", "categoria__nombre")
+
+
+@admin.register(Apartado)
+class ApartadoAdmin(admin.ModelAdmin):
+    list_display = ("id", "usuario", "producto", "sucursal", "talla", "color", "cantidad", "estado", "expira_en")
+    list_filter = ("estado", "sucursal")
+
+
+@admin.register(Pedido)
+class PedidoAdmin(admin.ModelAdmin):
+    list_display = ("id", "usuario", "sucursal", "tipo", "estado", "pago_metodo", "total_centavos", "creado_en")
+    list_filter = ("estado", "tipo", "pago_metodo", "sucursal")
+
+
+@admin.register(PedidoItem)
+class PedidoItemAdmin(admin.ModelAdmin):
+    list_display = ("id", "pedido", "producto", "talla", "color", "cantidad", "precio_centavos")

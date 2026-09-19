@@ -8,12 +8,13 @@ import {
   UserCog,
   UsersRound,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/Badge/Badge'
 import { ROUTES } from '@/constants/routes'
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser'
 import { useAccessOptions } from '@/features/roles/hooks/useRoles'
 import { useUsers } from '@/features/users/hooks/useUsers'
+import { getUserRole } from '@/utils/accessControl'
 import './DashboardPage.css'
 
 const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
@@ -27,6 +28,24 @@ export function DashboardPage() {
   const currentUser = useCurrentUser()
   const usersQuery = useUsers(1, 5)
   const accessQuery = useAccessOptions()
+  const role = getUserRole(currentUser.data)
+  // Sin directo: cliente/cajero ven dashboard simplificado sin redirección
+  if (currentUser.isSuccess && (role === 'cliente' || role === 'cajero')) {
+    const name = currentUser.data?.nombre || 'Usuario'
+    return (
+      <section className="page-shell dashboard-page">
+        <div className="dashboard-welcome">
+          <div><span className="eyebrow">Bienvenido</span><h1>Hola, {name}.</h1><p>{role === 'cliente' ? 'Explora el catálogo, prueba ropa virtual y gestiona tu perfil.' : 'Gestiona ventas y tu perfil.'}</p></div>
+        </div>
+        <div className="stats-grid">
+          <Link to={ROUTES.CATALOGO} className="stat-card surface-card" style={{ textDecoration: 'none', color: 'inherit' }}><strong>Catálogo</strong><p>Explorar y filtrar productos</p><small>CU-04</small></Link>
+          <Link to={ROUTES.PROFILE} className="stat-card surface-card" style={{ textDecoration: 'none', color: 'inherit' }}><strong>Mi Perfil</strong><p>Datos, medidas en metros, talla</p><small>CU-03</small></Link>
+          <Link to={ROUTES.CART} className="stat-card surface-card" style={{ textDecoration: 'none', color: 'inherit' }}><strong>Carrito</strong><p>Ver y comprar</p><small>CU-11/12</small></Link>
+          <Link to={ROUTES.PEDIDOS} className="stat-card surface-card" style={{ textDecoration: 'none', color: 'inherit' }}><strong>Pedidos</strong><p>Mis pedidos</p><small>CU-19</small></Link>
+        </div>
+      </section>
+    )
+  }
   const users = usersQuery.data?.results || []
   const roles = accessQuery.data?.roles || []
   const permissions = accessQuery.data?.permisos || []

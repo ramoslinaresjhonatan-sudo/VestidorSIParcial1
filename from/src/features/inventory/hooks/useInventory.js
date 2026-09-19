@@ -13,6 +13,9 @@ export function useHistorial(params) {
   const skip = params?._skip
   return useQuery({ queryKey: ['inventario-historial', params], queryFn: () => inventoryApi.getHistorial(params), enabled: !skip })
 }
+export function useAlertas() {
+  return useQuery({ queryKey: ['inventario-alertas'], queryFn: inventoryApi.getAlertas })
+}
 function offlineWrap(mutationFn) {
   return async (payload) => {
     if (!navigator.onLine) {

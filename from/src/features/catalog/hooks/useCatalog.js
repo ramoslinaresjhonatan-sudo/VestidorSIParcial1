@@ -70,6 +70,18 @@ export function useDisponibilidad(id, params) {
   })
 }
 
+export function useApartar() {
+  return useMutation({ mutationFn: catalogApi.apartar })
+}
+
+export function useRecomendacionTalla(productoId) {
+  return useQuery({
+    queryKey: ['recomendacion-talla', productoId],
+    queryFn: () => catalogApi.getRecomendacionTalla(productoId),
+    enabled: Boolean(productoId),
+  })
+}
+
 export function useAdminProducts() {
   return useQuery({
     queryKey: ['catalog-admin'],

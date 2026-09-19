@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Star, ZoomIn, MapPin, Package, ArrowLeft, ShoppingCart, Bell, WifiOff, Store } from 'lucide-react'
+import { Star, ZoomIn, MapPin, Package, ArrowLeft, ShoppingCart, Bell, WifiOff, Store, Camera, Bookmark, Sparkles } from 'lucide-react'
 import { DisponibilidadSucursal } from '../components/DisponibilidadSucursal'
+import { VozIA } from '../components/VozIA'
+import { useProfile } from '@/features/profile/hooks/useProfile'
+import { getUserRole } from '@/utils/accessControl'
+import { useApartar, useRecomendacionTalla } from '../hooks/useCatalog'
+import { useSucursales } from '@/features/inventory/hooks/useInventory'
 import { Spinner } from '@/components/ui/Spinner/Spinner'
 import { Button } from '@/components/ui/Button/Button'
 import { ErrorMessage } from '@/components/shared/ErrorMessage/ErrorMessage'
@@ -29,8 +34,23 @@ export function ProductDetailPage() {
   const [opinionForm, setOpinionForm] = useState({ usuario_nombre: '', calificacion: 5, comentario: '' })
   const [offlineData, setOfflineData] = useState(null)
   const [disponibilidadOpen, setDisponibilidadOpen] = useState(false)
+  const [apartarOpen, setApartarOpen] = useState(false)
+  const [apartarSucursal, setApartarSucursal] = useState('')
+  const apartarMut = useApartar()
+  const sucursalesQuery = useSucursales()
+  const handleApartar = () => {
+    if (!apartarSucursal) return setNotifyMsg('Selecciona sucursal')
+    apartarMut.mutate({ producto_id: product.id, sucursal_id: Number(apartarSucursal), talla: selectedTalla, color: selectedColor, cantidad: Number(cantidad) }, {
+      onSuccess: (d) => { setNotifyMsg(d.message || 'Apartado por 48h'); setApartarOpen(false) },
+      onError: (e) => setNotifyMsg(handleApiError(e)),
+    })
+  }
 
   const product = detailQuery.data || offlineData
+  const profileQuery = useProfile()
+  const recomendacionQuery = useRecomendacionTalla(product?.id)
+  const role = getUserRole(profileQuery.data)
+  const isClienteTryOn = role === 'cliente'
 
   // Offline cache
   useEffect(() => {
@@ -148,6 +168,13 @@ export function ProductDetailPage() {
             )) : <p>No hay variantes registradas</p>}
           </div>
 
+          {recomendacionQuery.data && (
+            <div className="surface-card" style={{ background: '#eef2ff', border: '1px solid #c7d2fe', padding: 10 }}>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}><Sparkles size={14} /> <strong>IA Talla recomendada: {recomendacionQuery.data.talla_recomendada}</strong> <small>confianza {(recomendacionQuery.data.confianza*100).toFixed(0)}%</small></div>
+              <small style={{ color: '#475569' }}>{recomendacionQuery.data.motivo}</small>
+            </div>
+          )}
+
           {/* Selector cantidad y añadir */}
           <div className="product-actions">
             <div className="qty-row">
@@ -164,7 +191,12 @@ export function ProductDetailPage() {
                 </div>
               </div>
             ) : (
-              <Button icon={ShoppingCart} onClick={handleAddToCart} loading={cartActions.add.isPending} className="btn-add-cart">Agregar al carrito — {product.precio_formateado}</Button>
+              <>
+                <Button icon={ShoppingCart} onClick={handleAddToCart} loading={cartActions.add.isPending} className="btn-add-cart">Agregar al carrito — {product.precio_formateado}</Button>
+                <Button icon={Camera} variant="secondary" onClick={() => navigate(`/catalogo/${product.id}/probar`)} disabled={!isClienteTryOn} title={isClienteTryOn ? 'Probar virtualmente' : 'Solo clientes pueden probar con cámara'}>
+                  Probar con cámara {isClienteTryOn ? '' : '(solo clientes)'}
+                </Button>
+              </>
             )}
           </div>
 
@@ -180,9 +212,13 @@ export function ProductDetailPage() {
               </tbody>
             </table>
             <Button icon={Store} variant="secondary" onClick={() => setDisponibilidadOpen(true)} style={{ marginTop: 8, width: '100%' }}>Ver disponibilidad en tiendas</Button>
+            {isClienteTryOn && <Button icon={Bookmark} variant="secondary" onClick={() => setApartarOpen(true)} style={{ marginTop: 8, width: '100%' }}>Apartar en sucursal (48h)</Button>}
           </div>
         </div>
       </div>
+
+      {/* CU-09 Voz IA */}
+      {isClienteTryOn && <VozIA producto={product} />}
 
       {/* Opiniones */}
       <div className="product-opiniones surface-card">
@@ -212,6 +248,17 @@ export function ProductDetailPage() {
 
       <Modal isOpen={disponibilidadOpen} onClose={() => setDisponibilidadOpen(false)} title={`Disponibilidad — ${product.nombre}`} size="lg">
         <DisponibilidadSucursal productoId={product.id} talla={selectedTalla} color={selectedColor} onClose={() => setDisponibilidadOpen(false)} />
+      </Modal>
+
+      <Modal isOpen={apartarOpen} onClose={() => setApartarOpen(false)} title={`Apartar ${product.nombre}`} size="sm">
+        <div className="form-grid">
+          <label className="plain-field">Sucursal<span>*</span><select value={apartarSucursal} onChange={(e) => setApartarSucursal(e.target.value)}><option value="">Seleccionar sucursal</option>{(sucursalesQuery.data || []).map((s) => <option key={s.id} value={s.id}>{s.nombre} — {s.ciudad}</option>)}</select></label>
+          <label className="plain-field">Talla<input value={selectedTalla} disabled /></label>
+          <label className="plain-field">Color<input value={selectedColor} disabled /></label>
+          <label className="plain-field">Cantidad<input type="number" min="1" value={cantidad} onChange={(e) => setCantidad(e.target.value)} /></label>
+          <p><small>Se reserva stock por 48h. Recoge en tienda con tu correo.</small></p>
+          <div className="form-actions"><Button variant="secondary" onClick={() => setApartarOpen(false)}>Cancelar</Button><Button icon={Bookmark} onClick={handleApartar} loading={apartarMut.isPending}>Confirmar apartado</Button></div>
+        </div>
       </Modal>
     </section>
   )

@@ -1,0 +1,10 @@
+.tryon-page { display: grid; gap: 16px; }
+.tryon-grid { display: grid; grid-template-columns: 1.4fr .9fr; gap: 16px; }
+@media (max-width: 900px) { .tryon-grid { grid-template-columns: 1fr; } }
+.tryon-canvas { padding: 12px; min-height: 520px; display: grid; place-items: center; background: #111; border-radius: 12px; }
+.tryon-controls { padding: 16px; display: grid; gap: 12px; }
+.tryon-sliders { display: grid; gap: 8px; }
+.tryon-sliders label { display: grid; gap: 4px; font-size: .85rem; }
+.tryon-sliders input[type=range] { width: 100%; }
+.tryon-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.tryon-tips { font-size: .8rem; color: #64748b; background: #f9fafb; padding: 10px; border-radius: 8px; }

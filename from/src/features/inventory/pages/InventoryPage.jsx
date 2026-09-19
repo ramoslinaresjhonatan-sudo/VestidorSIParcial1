@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Package, ArrowRightLeft, AlertTriangle, Plus, Search, WifiOff, RefreshCw } from 'lucide-react'
-import { useInventario, useSucursales, useAjustarStock, useTrasladar, useMerma, useHistorial } from '../hooks/useInventory'
+import { useInventario, useSucursales, useAjustarStock, useTrasladar, useMerma, useHistorial, useAlertas } from '../hooks/useInventory'
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser'
 import { getUserRole, canManageInventory } from '@/utils/accessControl'
 import { Button } from '@/components/ui/Button/Button'
@@ -23,6 +23,7 @@ export function InventoryPage() {
   const [applied, setApplied] = useState({})
   const inventarioQuery = useInventario(canManage ? applied : { _skip: true })
   const historialQuery = useHistorial(canManage ? applied : { _skip: true })
+  const alertasQuery = useAlertas()
   const ajustarMut = useAjustarStock()
   const trasladarMut = useTrasladar()
   const mermaMut = useMerma()
@@ -41,15 +42,6 @@ export function InventoryPage() {
   useEffect(() => {
     if (vendSucursal) setFilters((f) => ({ ...f, sucursal_id: String(vendSucursal.id) }))
   }, [vendSucursal])
-
-  if (currentUser.isLoading) return <div className="page-shell"><Spinner /></div>
-  if (!canManage) {
-    return (
-      <section className="page-shell inventory-page">
-        <EmptyState title="Acceso restringido" message={`Tu cuenta es de tipo "${userRole}" (cliente/cajero). La gestión de inventario solo está disponible para Administrador y Vendedor de sucursal. Tu perfil no muestra tallas ni inventario por este motivo.`} />
-      </section>
-    )
-  }
 
   useEffect(() => {
     const onOnline = async () => {
@@ -71,6 +63,15 @@ export function InventoryPage() {
     window.addEventListener('online', onOnline)
     return () => window.removeEventListener('online', onOnline)
   }, [])
+
+  if (currentUser.isLoading) return <div className="page-shell"><Spinner /></div>
+  if (!canManage) {
+    return (
+      <section className="page-shell inventory-page">
+        <EmptyState title="Acceso restringido" message={`Tu cuenta es de tipo "${userRole}" (cliente/cajero). La gestión de inventario solo está disponible para Administrador y Vendedor de sucursal. Tu perfil no muestra tallas ni inventario por este motivo.`} />
+      </section>
+    )
+  }
 
   const apply = () => setApplied({ ...filters })
   const clear = () => { setFilters({ sucursal_id: vendSucursal ? String(vendSucursal.id) : '', producto: '', talla: '', color: '' }); setApplied(vendSucursal ? { sucursal_id: String(vendSucursal.id) } : {}) }
@@ -138,6 +139,11 @@ export function InventoryPage() {
       {error && <div className="page-notice page-notice--danger">{error}</div>}
       {offlineNotice && <div className="page-notice page-notice--warning"><WifiOff size={14} /> Cambios pendientes offline — se sincronizarán al reconectar</div>}
       {!navigator.onLine && <div className="page-notice page-notice--warning">Sin conexión: los cambios se guardarán localmente</div>}
+      {canManage && alertasQuery.data?.length > 0 && (
+        <div className="page-notice" style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#991b1b', padding: 10, borderRadius: 8 }}>
+          <AlertTriangle size={14} /> CU-18 Alertas stock mínimo: {alertasQuery.data.length} variantes bajo mínimo ({alertasQuery.data.map((a) => `${a.producto} ${a.talla}/${a.color} ${a.sucursal} ${a.stock}≤${a.minimo}`).join(' • ')})
+        </div>
+      )}
 
       <div className="inventory-filters surface-card">
         <div className="table-search"><Search size={16} /><input value={filters.producto} onChange={(e) => setFilters((f) => ({ ...f, producto: e.target.value }))} placeholder="Buscar producto/marca..." /></div>

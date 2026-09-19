@@ -31,8 +31,12 @@ export const ROUTES = {
   FINANCIAL_REPORTS: '/app/finanzas/reportes',
   CATALOGO: '/catalogo',
   CATALOGO_DETALLE: '/catalogo/:id',
+  TRYON: '/catalogo/:id/probar',
   ADMIN_CATALOGO: '/app/catalogo',
   CART: '/app/carrito',
   PROFILE: '/app/perfil',
   INVENTARIO: '/app/inventario',
+  PEDIDOS: '/app/pedidos',
+  POS: '/app/pos',
+  REPORTES: '/app/reportes',
 }

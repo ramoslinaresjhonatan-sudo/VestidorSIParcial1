@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "apps.billing.apps.BillingConfig",
     "apps.cart.apps.CartConfig",
     "apps.catalog.apps.CatalogConfig",
+    "apps.tryon.apps.TryonConfig",
     "apps.users.apps.UsersConfig",
 ]
 

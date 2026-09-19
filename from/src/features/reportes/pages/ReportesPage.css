@@ -1,0 +1,6 @@
+.reportes-page { display: grid; gap: 16px; }
+.reportes-filtros { padding: 12px; }
+.reportes-filtros select { padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 8px; }
+.reportes-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 16px; }
+.reportes-ia { grid-column: 1/-1; background: #eef2ff; border: 1px solid #c7d2fe; }
+.reportes-ia p { color: #1e293b; }

@@ -8,6 +8,14 @@ from apps.catalog.api.inventory_views import (
     RegistrarMermaView,
     TrasladarStockView,
 )
+from apps.catalog.api.ventas_views import (
+    AlertasStockView,
+    ApartadoView,
+    PedidoEstadoView,
+    PedidoListCreateView,
+    RecomendacionTallaView,
+    ReportesView,
+)
 from apps.catalog.api.views import (
     AdminProductoDetailView,
     AdminProductoListCreateView,
@@ -46,4 +54,11 @@ urlpatterns = [
     path("inventory/trasladar/", TrasladarStockView.as_view(), name="inventory-trasladar"),
     path("inventory/merma/", RegistrarMermaView.as_view(), name="inventory-merma"),
     path("inventory/historial/", HistorialInventarioView.as_view(), name="inventory-historial"),
+    path("inventory/alertas/", AlertasStockView.as_view(), name="inventory-alertas"),
+    # CU-07 Apartar, CU-10 Recomendación, CU-13/14/19 Pedidos, CU-20 Reportes
+    path("apartados/", ApartadoView.as_view(), name="apartados"),
+    path("recomendacion-talla/<int:producto_id>/", RecomendacionTallaView.as_view(), name="recomendacion-talla"),
+    path("pedidos/", PedidoListCreateView.as_view(), name="pedidos-list-create"),
+    path("pedidos/<int:pedido_id>/estado/", PedidoEstadoView.as_view(), name="pedidos-estado"),
+    path("reportes/", ReportesView.as_view(), name="reportes"),
 ]

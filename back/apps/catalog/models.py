@@ -100,6 +100,9 @@ class Producto(models.Model):
         null=True,
         help_text="Imagen subida como archivo",
     )
+    # CU-08 try-on (fase 1: modelo 3D opcional)
+    modelo_3d = models.FileField(upload_to="tryon/modelos/%Y/%m/", blank=True, null=True)
+    tryon_escala = models.JSONField(default=dict, blank=True, help_text="Escala por talla ej {\"XS\":0.9}")
     activo = models.BooleanField(default=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
@@ -178,6 +181,7 @@ class StockSucursal(models.Model):
     talla = models.CharField(max_length=10, blank=True, default="", help_text="Talla específica, vacío = stock total")
     color = models.CharField(max_length=50, blank=True, default="", help_text="Color específico")
     stock = models.PositiveIntegerField(default=0)
+    stock_minimo = models.PositiveIntegerField(default=3, help_text="Alerta si stock <= mínimo")
     actualizado_en = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -256,3 +260,78 @@ class Merma(models.Model):
         ordering = ("-creado_en",)
         verbose_name = "merma"
         verbose_name_plural = "mermas"
+
+
+# === CU-07 Apartado ===
+class Apartado(models.Model):
+    class Estado(models.TextChoices):
+        ACTIVO = "activo", "Activo"
+        VENCIDO = "vencido", "Vencido"
+        CANCELADO = "cancelado", "Cancelado"
+        COMPLETADO = "completado", "Completado"
+
+    usuario = models.ForeignKey("users.Usuario", on_delete=models.CASCADE, related_name="apartados")
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="apartados")
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, related_name="apartados")
+    talla = models.CharField(max_length=10, blank=True, default="")
+    color = models.CharField(max_length=50, blank=True, default="")
+    cantidad = models.PositiveIntegerField(default=1)
+    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.ACTIVO)
+    expira_en = models.DateTimeField()
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-creado_en",)
+        verbose_name = "apartado"
+        verbose_name_plural = "apartados"
+
+
+# === CU-18 stock mínimo para alertas ===
+# Se añade stock_minimo a StockSucursal vía migración (ver 0008)
+
+
+# === CU-13/19 Pedidos ===
+class Pedido(models.Model):
+    class Estado(models.TextChoices):
+        PENDIENTE = "pendiente", "Pendiente"
+        PREPARANDO = "preparando", "Preparando"
+        LISTO = "listo", "Listo para entrega"
+        ENTREGADO = "entregado", "Entregado"
+        CANCELADO = "cancelado", "Cancelado"
+
+    class Tipo(models.TextChoices):
+        ONLINE = "online", "Online"
+        TIENDA = "tienda", "Tienda física"
+
+    class PagoMetodo(models.TextChoices):
+        QR = "qr", "QR"
+        TARJETA = "tarjeta", "Tarjeta"
+        EFECTIVO = "efectivo", "Efectivo"
+
+    usuario = models.ForeignKey("users.Usuario", on_delete=models.CASCADE, related_name="pedidos")
+    sucursal = models.ForeignKey(Sucursal, null=True, blank=True, on_delete=models.SET_NULL, related_name="pedidos")
+    tipo = models.CharField(max_length=20, choices=Tipo.choices, default=Tipo.ONLINE)
+    estado = models.CharField(max_length=20, choices=Estado.choices, default=Estado.PENDIENTE)
+    pago_metodo = models.CharField(max_length=20, choices=PagoMetodo.choices, default=PagoMetodo.TARJETA)
+    total_centavos = models.PositiveIntegerField(default=0)
+    qr_data = models.TextField(blank=True, default="")
+    creado_en = models.DateTimeField(auto_now_add=True)
+    actualizado_en = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("-creado_en",)
+        verbose_name = "pedido"
+        verbose_name_plural = "pedidos"
+
+
+class PedidoItem(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name="items")
+    producto = models.ForeignKey(Producto, on_delete=models.PROTECT)
+    nombre = models.CharField(max_length=150)
+    talla = models.CharField(max_length=10, blank=True, default="")
+    color = models.CharField(max_length=50, blank=True, default="")
+    cantidad = models.PositiveIntegerField()
+    precio_centavos = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.nombre} x{self.cantidad}"

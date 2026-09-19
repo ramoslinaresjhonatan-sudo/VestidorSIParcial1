@@ -1,0 +1,15 @@
+.pedidos-page { display: grid; gap: 16px; }
+.pedidos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 16px; }
+.pedido-card { padding: 16px; display: grid; gap: 8px; }
+.pedido-card header { display: flex; justify-content: space-between; align-items: center; }
+.estado { padding: 4px 8px; border-radius: 999px; font-size: .7rem; font-weight: 700; text-transform: uppercase; }
+.estado--pendiente { background: #fef3c7; color: #92400e; }
+.estado--preparando { background: #dbeafe; color: #1e40af; }
+.estado--listo { background: #e0e7ff; color: #3730a3; }
+.estado--entregado { background: #dcfce7; color: #166534; }
+.estado--cancelado { background: #fee2e2; color: #991b1b; }
+.pedido-items { display: grid; gap: 4px; font-size: .85rem; color: #374151; }
+.pedido-total { font-size: 1rem; }
+.pedido-qr { display: flex; gap: 10px; align-items: center; background: #f9fafb; padding: 8px; border-radius: 8px; }
+.pedido-qr img { border: 1px solid #e5e7eb; border-radius: 8px; }
+.pedido-acciones { display: flex; gap: 8px; flex-wrap: wrap; }

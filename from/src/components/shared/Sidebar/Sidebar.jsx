@@ -28,10 +28,35 @@ const navigationGroups = [
     key: 'tienda',
     label: 'Tienda',
     icon: ShoppingBag,
-    // cliente y todos ven tienda; admin/vendedor también pero no es su foco principal
     items: [
       { to: ROUTES.CATALOGO, label: 'Catálogo', shortLabel: 'C' },
       { to: ROUTES.CART, label: 'Mi Carrito', shortLabel: 'Ca' },
+    ],
+  },
+  {
+    key: 'pedidos',
+    label: 'Pedidos',
+    icon: Package,
+    items: [
+      { to: ROUTES.PEDIDOS, label: 'Mis Pedidos', shortLabel: 'Pe' },
+    ],
+  },
+  {
+    key: 'ventas',
+    label: 'Ventas',
+    icon: ShoppingCart,
+    allowedRoles: ['administrador', 'vendedor'],
+    items: [
+      { to: ROUTES.POS, label: 'POS Venta', shortLabel: 'Po' },
+    ],
+  },
+  {
+    key: 'reportes',
+    label: 'Reportes',
+    icon: Crown,
+    allowedRoles: ['administrador', 'vendedor'],
+    items: [
+      { to: ROUTES.REPORTES, label: 'Reportes IA', shortLabel: 'Re' },
     ],
   },
   {

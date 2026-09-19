@@ -26,4 +26,12 @@ export const inventoryApi = {
     const { data } = await apiClient.get('/catalog/inventory/historial/', { params })
     return data.data
   },
+  getAlertas: async () => {
+    const { data } = await apiClient.get('/catalog/inventory/alertas/')
+    return data.data
+  },
+  setAlertaMinimo: async ({ stock_id, stock_minimo }) => {
+    const { data } = await apiClient.patch('/catalog/inventory/alertas/', { stock_id, stock_minimo })
+    return data.data
+  },
 }

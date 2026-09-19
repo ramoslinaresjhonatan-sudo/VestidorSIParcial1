@@ -10,10 +10,14 @@ import { RolesPage } from '@/features/roles/pages/RolesPage'
 import { UsersPage } from '@/features/users/pages/UsersPage'
 import { CatalogPage } from '@/features/catalog/pages/CatalogPage'
 import { ProductDetailPage } from '@/features/catalog/pages/ProductDetailPage'
+import { TryOnPage } from '@/features/tryon/pages/TryOnPage'
 import { AdminCatalogPage } from '@/features/catalog/pages/AdminCatalogPage'
 import { CartPage } from '@/features/cart/pages/CartPage'
 import { ProfilePage } from '@/features/profile/pages/ProfilePage'
 import { InventoryPage } from '@/features/inventory/pages/InventoryPage'
+import { PedidosPage } from '@/features/pedidos/pages/PedidosPage'
+import { POSPage } from '@/features/pos/pages/POSPage'
+import { ReportesPage } from '@/features/reportes/pages/ReportesPage'
 import { MainLayout } from '@/layouts/MainLayout'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ProtectedRoute } from './ProtectedRoute'
@@ -28,6 +32,7 @@ export function AppRouter() {
       <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
       <Route path={ROUTES.CATALOGO} element={<CatalogPage />} />
       <Route path="/catalogo/:id" element={<ProductDetailPage />} />
+      <Route path="/catalogo/:id/probar" element={<TryOnPage />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
@@ -41,6 +46,9 @@ export function AppRouter() {
           <Route path={ROUTES.CART} element={<CartPage />} />
           <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
           <Route path={ROUTES.INVENTARIO} element={<InventoryPage />} />
+          <Route path={ROUTES.PEDIDOS} element={<PedidosPage />} />
+          <Route path={ROUTES.POS} element={<POSPage />} />
+          <Route path={ROUTES.REPORTES} element={<ReportesPage />} />
           <Route path="/app/perfil" element={<Navigate to={ROUTES.PROFILE} replace />} />
           <Route path="/app/usuarios" element={<Navigate to={ROUTES.USERS} replace />} />
         </Route>

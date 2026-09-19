@@ -90,4 +90,18 @@ export const catalogApi = {
     const { data } = await apiClient.delete(`/catalog/admin/products/${id}/`)
     return data
   },
+  // CU-07 Apartar
+  apartar: async (payload) => {
+    const { data } = await apiClient.post('/catalog/apartados/', payload)
+    return data.data || data
+  },
+  getApartados: async () => {
+    const { data } = await apiClient.get('/catalog/apartados/')
+    return data.data
+  },
+  // CU-10 Recomendación talla IA
+  getRecomendacionTalla: async (productoId) => {
+    const { data } = await apiClient.get(`/catalog/recomendacion-talla/${productoId}/`)
+    return data.data
+  },
 }
